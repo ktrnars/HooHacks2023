@@ -1,0 +1,67 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+    <title>Investment Portfolio</title>
+  </head>
+  <body>
+    <h1>Investment Portfolio</h1>
+    <button class = tab3 onclick="applic()"><b>Back</b></button>
+
+    <form id="investmentForm">
+      <h2>Checklist:</h2>
+      <label><input type="checkbox" name="investmentOption" value="Stocks">Stocks</label><br>
+      <label><input type="checkbox" name="investmentOption" value="Bonds">Bonds</label><br>
+      <label><input type="checkbox" name="investmentOption" value="Real Estate">Real Estate</label><br>
+      <br>
+      <h2>Enter the amount invested for each option:</h2>
+      <label>Stocks: $<input type="number" name="stocksAmount"></label><br>
+      <label>Bonds: $<input type="number" name="bondsAmount"></label><br>
+      <label>Real Estate: $<input type="number" name="realEstateAmount"></label><br>
+      <br>
+      <input type="button" value="Submit" onclick="calculatePortfolio()">
+    </form>
+    <br>
+    <div id="result"></div>
+    <script>
+      function applic() {
+      location.replace("home.html")
+    }
+      function calculatePortfolio() {
+        const form = document.getElementById("investmentForm");
+        const investmentOptions = form.querySelectorAll('input[type=checkbox][name=investmentOption]:checked');
+        const totalAmount = parseFloat(form.stocksAmount.value) + parseFloat(form.bondsAmount.value) + parseFloat(form.realEstateAmount.value);
+        const resultElement = document.getElementById("result");
+        
+        let investments = [];
+        let isDiversified = true;
+        
+        investmentOptions.forEach(option => {
+          const investmentAmount = parseFloat(form[option.value.toLowerCase() + 'Amount'].value);
+          const percentage = investmentAmount / totalAmount * 100;
+          investments.push({
+            option: option.value,
+            amount: investmentAmount,
+            percentage: percentage
+          });
+          if (investmentAmount > totalAmount / 2) {
+            isDiversified = false;
+          }
+        });
+        
+        let resultHTML = '<h2>Your portfolio:</h2>';
+        investments.forEach(investment => {
+          resultHTML += `${investment.option}: $${investment.amount.toFixed(2)} (${investment.percentage.toFixed(2)}%)<br>`;
+        });
+        resultHTML += `Total amount invested: $${totalAmount.toFixed(2)}<br>`;
+        
+        if (isDiversified) {
+          resultHTML += 'Your portfolio is balanced!';
+        } else {
+          resultHTML += 'Your portfolio is not balanced. You might want to consider diversifying your investments.';
+        }
+        
+        resultElement.innerHTML = resultHTML;
+      }
+    </script>
+  </body>
+</html>
